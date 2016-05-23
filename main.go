@@ -18,7 +18,7 @@ func main() {
 	r.GET("/ping", func(c *gin.Context) {
 		c.String(http.StatusOK, "pong")
 	})
-
+	r.StaticFile("/", "./public/index.html")
 	r.GET("/tasks", handlers.GetTasks(db))
 	r.POST("/tasks", handlers.PutTask(db))
 	r.DELETE("/tasks/:id", func(c *gin.Context) {})
