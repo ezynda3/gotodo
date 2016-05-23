@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"net/http"
 
-	"github.com/ezynda3/gotodo/models"
+	"github.com/ezynda3/gotodo/handlers"
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -19,10 +19,8 @@ func main() {
 		c.String(http.StatusOK, "pong")
 	})
 
-	r.GET("/tasks", func(c *gin.Context) {
-		c.JSON(http.StatusOK, models.GetTasks(db))
-	})
-	r.POST("/tasks", func(c *gin.Context) {})
+	r.GET("/tasks", handlers.GetTasks(db))
+	r.POST("/tasks", handlers.PutTask(db))
 	r.DELETE("/tasks/:id", func(c *gin.Context) {})
 
 	r.Run("localhost:8000")
