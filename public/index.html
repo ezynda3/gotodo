@@ -7,6 +7,9 @@
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
+        <!-- Font Awesome -->
+        <link rel="stylesheet"  href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
         <!-- JQuery -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
  
@@ -19,22 +22,55 @@
     </head>
     <body>
         <div class="container">
-            <ul class="list-group">
-                <li class="list-group-item" v-for="task in tasks">{{ task.name }}</li>
-            </ul>
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>My Tasks</h2>
+                    <ul class="list-group">
+                        <li class="list-group-item" v-for="task in tasks">
+                            {{ task.name }}
+                            <span class="pull-right">
+                                <button class="btn btn-xs btn-danger" data-id="{{ task.id }}">
+                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                </button>
+                            </span>
+                        </li>
+                    </ul>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="New Task" v-model="newTask.name">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="button" v-on:click="createTask">Create</button>
+                        </span>
+                    </div><!-- /input-group -->
+                </div>
+            </div>
         </div>
         <script>
             new Vue({
                 el: 'body',
 
                 data: {
-                    tasks: []
+                    tasks: [],
+                    newTask: {}
                 },
 
                 created: function() {
-                    this.$http('/tasks').then(function(response) {
+                    this.$http.get('/tasks').then(function(response) {
                         this.tasks = response.data.items
                     })
+                },
+
+                methods: {
+                    createTask: function() {
+                        this.$http.post('/tasks', this.newTask).success(function(response) {
+                            this.newTask.id = response.created;
+                            this.tasks.push(this.newTask);
+                            console.log("Task created!");
+                            console.log(this.newTask);
+                            this.newTask = {}
+                        }).error(function(error) {
+                            console.log(error);
+                        });
+                    }
                 }
             })
         </script>
