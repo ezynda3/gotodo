@@ -22,7 +22,7 @@ func main() {
 	r.StaticFile("/", "./public/index.html")
 	r.GET("/tasks", handlers.GetTasks(db))
 	r.POST("/tasks", handlers.PutTask(db))
-	r.DELETE("/tasks/:id", func(c *gin.Context) {})
+	r.DELETE("/tasks/:id", handlers.DeleteTask(db))
 
 	r.Run("localhost:8000")
 }
