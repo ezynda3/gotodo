@@ -59,7 +59,7 @@
 
                 created: function() {
                     this.$http.get('/tasks').then(function(response) {
-                        this.tasks = response.data.items
+                        this.tasks = (response.data.items == null) ? [] : response.data.items
                     })
                 },
 
